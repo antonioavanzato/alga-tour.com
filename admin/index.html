@@ -1,1 +1,632 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>ALGA · Заявки</title>
+<meta name="theme-color" content="#0e5f76">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ALGA">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%230e5f76'/%3E%3Cpath d='M4 14c3 0 3-3 6-3s3 3 6 3 3-3 4-3' stroke='%237fe3d0' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3Cpath d='M4 18c3 0 3-3 6-3s3 3 6 3 3-3 4-3' stroke='%23fff' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+  html,body{margin:0;padding:0;background:#f7f9f9;-webkit-text-size-adjust:100%;}
+</style>
+<style>
+/* ============================================================
+   ALGA · Админка заявок — редизайн 2026
+   ============================================================ */
+.alga-admin{
+  --c-accent:#0e5f76; --c-accent-2:#14809e;
+  --c-ink:#10242b; --c-muted:#6a7c83; --c-faint:#93a3a9;
+  --c-line:#e3e9ea; --c-hair:rgba(16,36,43,.08);
+  --c-bg:#ffffff; --c-subtle:#f7f9f9; --c-err:#c2453d;
+  --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,Consolas,monospace;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  color:var(--c-ink); max-width:1080px; margin:0 auto; padding:1rem 1.25rem 3rem;
+  box-sizing:border-box; -webkit-font-smoothing:antialiased; color-scheme:light;
+}
+.alga-admin *,.alga-admin *::before,.alga-admin *::after{box-sizing:border-box;}
+.alga-admin .hidden{display:none !important;}
 
+/* ---------- ВХОД ---------- */
+.alga-admin .login-card{max-width:392px; margin:2.5rem auto; background:#fff;
+  border:1px solid var(--c-hair); border-radius:26px; overflow:hidden;
+  box-shadow:0 1px 0 rgba(16,36,43,.04),0 22px 60px -18px rgba(16,36,43,.22);}
+.alga-admin .login-accent{height:5px; background:linear-gradient(90deg,#0e5f76,#14809e);}
+.alga-admin .login-body{padding:38px 30px 32px;}
+.alga-admin .login-brand{display:flex; align-items:center; gap:11px; margin-bottom:30px;}
+.alga-admin .login-mark{width:42px; height:42px; border-radius:13px; background:var(--c-accent);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.alga-admin .login-brand .nm{font-size:18px; font-weight:700; letter-spacing:-.01em; line-height:1;}
+.alga-admin .login-brand .sub{font-family:var(--mono); font-size:10px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--c-faint); margin-top:4px;}
+.alga-admin .login-card h2{font-size:22px; font-weight:700; letter-spacing:-.015em; margin:0 0 6px;}
+.alga-admin .login-card p{font-size:13.5px; color:var(--c-muted); margin:0 0 26px;}
+.alga-admin label{display:block; font-family:var(--mono); font-size:10px; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--c-faint); margin-bottom:7px;}
+.alga-admin .field{display:flex; align-items:center; gap:9px; border:1.5px solid var(--c-line);
+  border-radius:13px; padding:0 14px; height:50px; background:#fff !important; margin-bottom:16px;
+  transition:border-color .15s, box-shadow .15s;}
+.alga-admin .field:focus-within{border-color:var(--c-accent); box-shadow:0 0 0 3px rgba(14,95,118,.1);}
+.alga-admin .field svg{flex-shrink:0;}
+.alga-admin .field input{flex:1; min-width:0; height:100%; border:none; outline:none;
+  background:transparent !important; font-family:inherit; font-size:15px; color:#10242b !important;
+  -webkit-appearance:none; appearance:none; color-scheme:light;}
+.alga-admin .field input::placeholder{color:#aab8bd !important; opacity:1;}
+.alga-admin .btn{width:100%; height:52px; border:none; border-radius:13px; background:var(--c-accent);
+  color:#fff; font-family:inherit; font-size:15px; font-weight:650; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:8px; transition:background .2s;}
+.alga-admin .btn:hover{background:var(--c-accent-2);}
+.alga-admin .btn:disabled{opacity:.6; cursor:not-allowed;}
+.alga-admin .login-err{color:var(--c-err); font-size:13px; text-align:center; margin-top:14px; min-height:1.1rem;}
+.alga-admin .login-foot{font-family:var(--mono); font-size:11px; color:#aab8bd; text-align:center; margin-top:18px;}
+
+/* ---------- ШАПКА ---------- */
+.alga-admin .top{display:flex; justify-content:space-between; align-items:flex-start; gap:.6rem; margin-bottom:20px;}
+.alga-admin .top-title h1{font-size:21px; font-weight:700; letter-spacing:-.02em; margin:0;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.alga-admin .user-email{font-family:var(--mono); font-size:11px; color:var(--c-faint); margin-top:3px;
+  display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:220px;}
+.alga-admin .user{display:flex; gap:8px; flex-shrink:0;}
+.alga-admin .icon-btn{width:40px; height:40px; border-radius:11px; border:1px solid var(--c-line);
+  background:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer;
+  color:var(--c-muted); transition:border-color .15s, color .15s, background .15s;}
+.alga-admin .icon-btn:hover{border-color:var(--c-accent); color:var(--c-accent);}
+.alga-admin .icon-btn.on{border-color:var(--c-accent); color:var(--c-accent); background:rgba(14,95,118,.07);}
+.alga-admin .logout{height:40px; padding:0 14px; border-radius:11px; border:1px solid var(--c-line);
+  background:#fff; color:var(--c-muted); font-family:inherit; font-size:13px; font-weight:600;
+  cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap; transition:border-color .15s,color .15s;}
+.alga-admin .logout:hover{border-color:var(--c-accent); color:var(--c-accent);}
+
+/* ---------- СТАТЫ ---------- */
+.alga-admin .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px; margin-bottom:18px;}
+.alga-admin .stat{background:#fff; border:1px solid rgba(16,36,43,.07); border-radius:16px; padding:14px 16px;}
+.alga-admin .stat-top{display:flex; justify-content:space-between; align-items:center;}
+.alga-admin .stat-label{font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--c-faint);}
+.alga-admin .stat-dot{width:7px; height:7px; border-radius:50%;}
+.alga-admin .stat-n{font-family:var(--mono); font-size:30px; font-weight:600; letter-spacing:-.02em; margin-top:4px;}
+
+/* ---------- ФИЛЬТРЫ ---------- */
+.alga-admin .search{display:flex; align-items:center; gap:9px; border:1.5px solid var(--c-line);
+  border-radius:13px; padding:0 14px; height:46px; background:#fff; margin-bottom:10px;
+  transition:border-color .15s, box-shadow .15s;}
+.alga-admin .search:focus-within{border-color:var(--c-accent); box-shadow:0 0 0 3px rgba(14,95,118,.1);}
+.alga-admin .search input{flex:1; min-width:0; border:none; outline:none; background:transparent;
+  font-family:inherit; font-size:14px; color:var(--c-ink);}
+.alga-admin .search input::placeholder{color:#aab8bd;}
+.alga-admin .filter-row{display:flex; gap:8px; margin-bottom:18px;}
+.alga-admin .filter-row select{flex:1; min-width:0; height:42px; padding:0 2rem 0 12px;
+  border:1.5px solid var(--c-line); border-radius:11px; background:#fff; color:var(--c-ink);
+  font-family:inherit; font-size:13px; cursor:pointer; -webkit-appearance:none; appearance:none; color-scheme:light;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%23aab8bd' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right .65rem center; background-size:1rem;}
+.alga-admin .filter-row select:focus{outline:none; border-color:var(--c-accent); box-shadow:0 0 0 3px rgba(14,95,118,.1);}
+
+/* ---------- КАРТОЧКИ ---------- */
+.alga-admin .list{display:flex; flex-direction:column; gap:10px;}
+.alga-admin .card{position:relative; background:#fff; border:1px solid var(--c-hair); border-radius:18px;
+  padding:15px 16px 15px 19px; display:flex; gap:13px; align-items:center; cursor:pointer;
+  box-shadow:0 1px 2px rgba(16,36,43,.04),0 8px 22px -10px rgba(16,36,43,.1);
+  transition:box-shadow .15s, transform .1s, border-color .15s;}
+.alga-admin .card:hover{box-shadow:0 4px 10px rgba(16,36,43,.06),0 14px 30px -12px rgba(16,36,43,.16); border-color:#cdd9db;}
+.alga-admin .card:active{transform:scale(.995);}
+.alga-admin .card-rail{position:absolute; left:0; top:15px; bottom:15px; width:3px; border-radius:9999px;}
+.alga-admin .card-main{flex:1; min-width:0;}
+.alga-admin .card-meta{display:flex; align-items:center; gap:8px;}
+.alga-admin .chip{font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--c-accent); background:rgba(14,95,118,.08); padding:3px 7px; border-radius:6px; white-space:nowrap;}
+.alga-admin .card-time{font-family:var(--mono); font-size:11px; color:#aab8bd;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.alga-admin .card-name{font-size:16px; font-weight:650; color:var(--c-ink); margin-top:9px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.alga-admin .card-sub{font-size:13px; color:var(--c-muted); margin-top:2px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.alga-admin .card-phone{font-family:var(--mono); font-size:12.5px; color:#3a4d54; margin-top:7px;}
+.alga-admin .card-right{display:flex; flex-direction:column; align-items:flex-end; gap:9px; flex-shrink:0;}
+.alga-admin .chev{color:#cbd5d8; flex-shrink:0;}
+.alga-admin .status-sel{-webkit-appearance:none; appearance:none; border:none; cursor:pointer;
+  font-family:inherit; font-size:11.5px; font-weight:600; border-radius:9999px;
+  padding:5px 26px 5px 12px; color-scheme:light;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%23999' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right .5rem center; background-size:.85rem;}
+.alga-admin .st-new{color:#a85d00; background-color:#fff6e6;}
+.alga-admin .st-progress{color:#1d4ed8; background-color:#eef3ff;}
+.alga-admin .st-done{color:#15703f; background-color:#ecf8f0;}
+.alga-admin .st-cancel{color:#b03a30; background-color:#fdeeec;}
+.alga-admin .empty{text-align:center; color:var(--c-muted); padding:3rem 1rem; font-size:.95rem;}
+
+@media (max-width:560px){
+  .alga-admin .logout-txt{display:none;}
+  .alga-admin .logout{padding:0; width:40px; justify-content:center;}
+}
+
+/* ---------- МОДАЛКА и PTR ---------- */
+.alga-modal-overlay{position:fixed; inset:0; background:rgba(16,36,43,.5); z-index:9998;
+  display:flex; align-items:flex-end; justify-content:center;
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .25s ease, visibility 0s linear .25s;}
+.alga-modal-overlay.show{opacity:1; visibility:visible; pointer-events:auto; transition:opacity .25s ease, visibility 0s;}
+.alga-modal{background:#fff; width:100%; max-width:480px; border-radius:24px 24px 0 0;
+  padding:14px 22px 26px; max-height:90vh; overflow-y:auto; transform:translateY(100%);
+  transition:transform .3s ease; color:#10242b;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --mono:ui-monospace,'SF Mono','JetBrains Mono',Menlo,Consolas,monospace;}
+.alga-modal-overlay.show .alga-modal{transform:translateY(0);}
+@media (min-width:560px){ .alga-modal-overlay{align-items:center;} .alga-modal{border-radius:24px;} }
+.alga-modal *{box-sizing:border-box;}
+.alga-modal .m-grab{width:40px; height:4px; background:#d4dcdd; border-radius:9999px; margin:0 auto 20px;}
+.alga-modal .m-head{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:20px;}
+.alga-modal .m-badge{font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+  color:#0e5f76; background:rgba(14,95,118,.08); padding:4px 9px; border-radius:7px;}
+.alga-modal .m-name{font-size:24px; font-weight:700; letter-spacing:-.02em; margin:12px 0 0; color:#10242b;}
+.alga-modal .m-close{width:34px; height:34px; border-radius:10px; border:1px solid #e3e9ea; background:#fff;
+  color:#93a3a9; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; line-height:1;}
+.alga-modal .m-rows{background:#f7f9f9; border:1px solid rgba(16,36,43,.05); border-radius:16px; padding:6px 16px; margin-bottom:18px;}
+.alga-modal .m-row{display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:11px 0; border-bottom:1px solid #eaeeef;}
+.alga-modal .m-row:last-child{border-bottom:none;}
+.alga-modal .m-row .k{font-size:13.5px; color:#6a7c83; flex-shrink:0;}
+.alga-modal .m-row .v{font-size:13.5px; font-weight:600; color:#10242b; text-align:right; word-break:break-word;}
+.alga-modal .m-row .v.mono{font-family:var(--mono);}
+.alga-modal .m-notes{background:#fffaf0; border:1px solid #fae8c4; border-radius:13px; padding:13px 15px;
+  font-size:13.5px; line-height:1.5; color:#6b5526; margin-bottom:20px;}
+.alga-modal .m-actions{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.alga-modal .m-btn{display:flex; align-items:center; justify-content:center; gap:8px; height:50px;
+  border:none; border-radius:13px; font-family:inherit; font-size:14px; font-weight:650;
+  text-decoration:none; color:#fff; cursor:pointer; transition:opacity .15s;}
+.alga-modal .m-btn:active{opacity:.85;}
+.alga-modal .m-btn svg{flex-shrink:0;}
+.alga-modal .b-wa{background:#25D366;}
+.alga-modal .b-tg{background:#0088cc;}
+.alga-modal .b-call{background:#0e5f76;}
+.alga-modal .b-copy{background:#eef2f2; color:#3a4d54;}
+.alga-modal .b-del{grid-column:1/-1; height:48px; background:#fff; color:#c2453d; border:1.5px solid #f1c5c0;}
+.alga-modal .b-del:active{background:#fdeeec;}
+
+.alga-ptr{position:fixed; top:0; left:50%; transform:translateX(-50%) translateY(-100%);
+  width:40px; height:40px; border-radius:50%; background:#fff; box-shadow:0 4px 14px rgba(14,95,118,.18);
+  color:#0e5f76; display:flex; align-items:center; justify-content:center; z-index:9000; transition:transform .2s ease;}
+.alga-ptr.spin svg{animation:algaptrspin .8s linear infinite;}
+@keyframes algaptrspin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<div class="alga-admin">
+
+  <!-- ВХОД -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <div class="login-accent"></div>
+      <div class="login-body">
+        <div class="login-brand">
+          <div class="login-mark">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 14c3 0 3-3 6-3s3 3 6 3 3-3 4-3" stroke="#7fe3d0" stroke-width="2" stroke-linecap="round"/><path d="M4 18c3 0 3-3 6-3s3 3 6 3 3-3 4-3" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M12 4c1.6 1.4 2.4 3 2.4 4.6 0 1.4-1.1 2.4-2.4 2.4S9.6 10 9.6 8.6C9.6 7 10.4 5.4 12 4Z" fill="#7fe3d0"/></svg>
+          </div>
+          <div>
+            <div class="nm">ALGA</div>
+            <div class="sub">Панель заявок</div>
+          </div>
+        </div>
+        <h2>С возвращением</h2>
+        <p>Войдите, чтобы видеть заявки в реальном времени</p>
+
+        <label for="adminEmail">Email</label>
+        <div class="field">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="#aab8bd" stroke-width="1.8"/><path d="m4 7 8 6 8-6" stroke="#aab8bd" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input type="email" id="adminEmail" autocomplete="username" placeholder="you@example.com">
+        </div>
+
+        <label for="adminPass">Пароль</label>
+        <div class="field">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="9" rx="2.5" stroke="#aab8bd" stroke-width="1.8"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="#aab8bd" stroke-width="1.8"/></svg>
+          <input type="password" id="adminPass" autocomplete="current-password" placeholder="Пароль">
+        </div>
+
+        <button class="btn" id="loginBtn">
+          Войти
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="login-err" id="loginErr"></div>
+        <div class="login-foot">🔒 Защищено Firebase Auth</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ПАНЕЛЬ -->
+  <div id="panel" class="hidden">
+    <div class="top">
+      <div class="top-title">
+        <h1>Заявки</h1>
+        <span id="userEmail" class="user-email"></span>
+      </div>
+      <div class="user">
+        <button class="icon-btn" id="bellBtn" title="Уведомления о новых заявках">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <button class="logout" id="logoutBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M16 17l5-5-5-5M21 12H9M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="logout-txt">Выйти</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="search">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#aab8bd" stroke-width="1.8"/><path d="m20 20-3.5-3.5" stroke="#aab8bd" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <input type="text" id="searchInput" placeholder="Поиск по имени или телефону">
+    </div>
+    <div class="filter-row">
+      <select id="typeFilter">
+        <option value="">Все услуги</option>
+        <option value="excursion">Экскурсии</option>
+        <option value="resort">Резорты</option>
+        <option value="hotel">Отели</option>
+      </select>
+      <select id="statusFilter">
+        <option value="">Все статусы</option>
+        <option value="new">Новые</option>
+        <option value="progress">В работе</option>
+        <option value="done">Подтверждённые</option>
+        <option value="cancel">Отменённые</option>
+      </select>
+    </div>
+
+    <div class="list" id="list"></div>
+    <div class="empty hidden" id="empty">Заявок не найдено</div>
+  </div>
+</div>
+
+<div class="alga-modal-overlay" id="modalOverlay"><div class="alga-modal" id="modalBox"></div></div>
+<div class="alga-ptr" id="ptr">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, setDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getMessaging, getToken, onMessage }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyArhh8lUUpDOQXgYMIZgzt-E3fjCsHs3v8",
+  authDomain: "alga-booking.firebaseapp.com",
+  projectId: "alga-booking",
+  storageBucket: "alga-booking.firebasestorage.app",
+  messagingSenderId: "344302117820",
+  appId: "1:344302117820:web:7a36b0c06d6d13786881b9"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const $ = (id) => document.getElementById(id);
+const loginScreen = $('loginScreen'), panel = $('panel');
+let allBookings = [], byId = {}, unsub = null, firstLoad = true, audioCtx = null;
+
+const overlay = $('modalOverlay'), modalBox = $('modalBox'), ptr = $('ptr');
+document.body.appendChild(overlay);
+document.body.appendChild(ptr);
+
+const TYPE_LABEL = { excursion:'Экскурсия', resort:'Резорт', hotel:'Отель' };
+const STATUS = {
+  new:      { label:'Новая',        cls:'st-new',      dot:'#d98a00' },
+  progress: { label:'В работе',     cls:'st-progress', dot:'#2563eb' },
+  done:     { label:'Подтверждена', cls:'st-done',     dot:'#1f9d57' },
+  cancel:   { label:'Отменена',     cls:'st-cancel',   dot:'#c2453d' }
+};
+
+// ==== PUSH (FCM) ====
+// VAPID-ключ: Firebase → Project Settings → Cloud Messaging → Web Push certificates → Generate key pair
+const VAPID_KEY = "ВСТАВЬ_СЮДА_VAPID_KEY";
+let messaging = null;
+
+async function enablePush() {
+  try {
+    if (!('serviceWorker' in navigator) || !auth.currentUser) return;
+    if (!VAPID_KEY || VAPID_KEY.indexOf('ВСТАВЬ') === 0) return;
+    const reg = await navigator.serviceWorker.register('firebase-messaging-sw.js');
+    messaging = getMessaging(app);
+    const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: reg });
+    if (token) {
+      await setDoc(doc(db, 'push_tokens', token), {
+        token, email: auth.currentUser.email, ts: serverTimestamp()
+      }, { merge: true });
+    }
+    onMessage(messaging, () => beep());
+  } catch (e) { console.error('push:', e); }
+}
+
+$('bellBtn').addEventListener('click', async () => {
+  if ('Notification' in window) {
+    const p = await Notification.requestPermission();
+    if (p === 'granted') { $('bellBtn').classList.add('on'); enablePush(); }
+    else { alert('Уведомления заблокированы. Разрешите их в настройках устройства.'); }
+  } else {
+    alert('Это устройство не поддерживает системные уведомления. Звук работает.');
+  }
+});
+
+function beep() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const t = audioCtx.currentTime;
+    [0, 0.18].forEach((d, i) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.frequency.value = i === 0 ? 880 : 1175;
+      o.connect(g); g.connect(audioCtx.destination);
+      g.gain.setValueAtTime(0.0001, t + d);
+      g.gain.exponentialRampToValueAtTime(0.35, t + d + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + d + 0.16);
+      o.start(t + d); o.stop(t + d + 0.18);
+    });
+  } catch (e) {}
+}
+
+function notifyNew(b) {
+  beep();
+  if ('Notification' in window && Notification.permission === 'granted') {
+    const txt = (b.fio || 'Без имени') + ' · ' + (TYPE_LABEL[b.service_type] || '') + ' · ' + (b.phone || '');
+    try { new Notification('🔔 Новая заявка ALGA', { body: txt, tag: 'alga' }); } catch (e) {}
+  }
+}
+
+$('loginBtn').addEventListener('click', doLogin);
+$('adminPass').addEventListener('keydown', (e) => { if (e.key === 'Enter') doLogin(); });
+function doLogin() {
+  try { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); audioCtx.resume(); } catch(e){}
+  $('loginErr').textContent = '';
+  $('loginBtn').disabled = true;
+  signInWithEmailAndPassword(auth, $('adminEmail').value.trim(), $('adminPass').value)
+    .catch((err) => {
+      const map = {
+        'auth/invalid-credential':'Неверный email или пароль',
+        'auth/invalid-email':'Некорректный email',
+        'auth/too-many-requests':'Слишком много попыток, подождите'
+      };
+      $('loginErr').textContent = map[err.code] || 'Ошибка входа';
+    })
+    .finally(() => { $('loginBtn').disabled = false; });
+}
+$('logoutBtn').addEventListener('click', () => signOut(auth));
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loginScreen.classList.add('hidden');
+    panel.classList.remove('hidden');
+    $('userEmail').textContent = user.email;
+    if ('Notification' in window && Notification.permission === 'granted') {
+      $('bellBtn').classList.add('on');
+      enablePush();
+    }
+    firstLoad = true;
+    subscribe();
+  } else {
+    if (unsub) { unsub(); unsub = null; }
+    panel.classList.add('hidden');
+    loginScreen.classList.remove('hidden');
+    $('adminPass').value = '';
+  }
+});
+
+function subscribe() {
+  const q = query(collection(db, 'bookings'), orderBy('createdAt', 'desc'));
+  unsub = onSnapshot(q, (snap) => {
+    if (!firstLoad) {
+      snap.docChanges().forEach((ch) => { if (ch.type === 'added') notifyNew(ch.doc.data()); });
+    }
+    firstLoad = false;
+    allBookings = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    byId = {}; allBookings.forEach((b) => byId[b.id] = b);
+    render();
+  }, (err) => {
+    $('list').innerHTML = '<div class="empty">Нет доступа к данным. Проверьте, что ваш email добавлен в правила Firestore.</div>';
+    console.error(err);
+  });
+}
+
+['searchInput','typeFilter','statusFilter'].forEach((id) => $(id).addEventListener('input', render));
+
+function render() {
+  const count = (f) => allBookings.filter(f).length;
+  $('stats').innerHTML = [
+    ['Всего', allBookings.length, '#0e5f76'],
+    ['Новые', count(b => (b.status||'new') === 'new'), '#d98a00'],
+    ['В работе', count(b => b.status === 'progress'), '#2563eb'],
+    ['Готово', count(b => b.status === 'done'), '#1f9d57']
+  ].map(([l,n,c]) => `<div class="stat"><div class="stat-top"><span class="stat-label">${l}</span><span class="stat-dot" style="background:${c}"></span></div><div class="stat-n">${n}</div></div>`).join('');
+
+  const term = $('searchInput').value.trim().toLowerCase();
+  const tf = $('typeFilter').value, sf = $('statusFilter').value;
+  const rows = allBookings.filter((b) => {
+    const st = b.status || 'new';
+    if (tf && b.service_type !== tf) return false;
+    if (sf && st !== sf) return false;
+    if (term) {
+      const hay = ((b.fio||'') + ' ' + (b.phone||'')).toLowerCase();
+      if (!hay.includes(term)) return false;
+    }
+    return true;
+  });
+
+  $('empty').classList.toggle('hidden', rows.length > 0);
+  $('list').innerHTML = rows.map(card).join('');
+
+  document.querySelectorAll('.alga-admin .card').forEach((el) => {
+    el.addEventListener('click', (e) => {
+      if (e.target.closest('.status-sel')) return;
+      openModal(el.dataset.id);
+    });
+  });
+  document.querySelectorAll('.alga-admin .status-sel').forEach((sel) => {
+    sel.addEventListener('click', (e) => e.stopPropagation());
+    sel.addEventListener('change', async function () {
+      const id = this.dataset.id, old = this.dataset.cur;
+      this.className = 'status-sel ' + STATUS[this.value].cls;
+      this.dataset.cur = this.value;
+      const rail = this.closest('.card').querySelector('.card-rail');
+      if (rail) rail.style.background = STATUS[this.value].dot;
+      try { await updateDoc(doc(db, 'bookings', id), { status: this.value }); }
+      catch (e) { alert('Не удалось сохранить статус'); this.value = old; this.dataset.cur = old; }
+    });
+  });
+}
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+function card(b) {
+  const st = b.status || 'new';
+  const t = b.service_type || 'excursion';
+  const opts = Object.keys(STATUS).map(k =>
+    `<option value="${k}" ${k===st?'selected':''}>${STATUS[k].label}</option>`).join('');
+  const subParts = [];
+  if (b.service) subParts.push(esc(b.service));
+  else subParts.push(TYPE_LABEL[t] || t);
+  if (b.people) subParts.push(esc(b.people) + ' чел');
+  return `<div class="card" data-id="${b.id}">
+    <div class="card-rail" style="background:${STATUS[st].dot}"></div>
+    <div class="card-main">
+      <div class="card-meta">
+        <span class="chip">${TYPE_LABEL[t]||t}</span>
+        <span class="card-time">${esc(b.received) || '—'}</span>
+      </div>
+      <div class="card-name">${esc(b.fio) || '—'}</div>
+      <div class="card-sub">${subParts.join(' · ')}</div>
+      <div class="card-phone">${esc(b.phone) || '—'}</div>
+    </div>
+    <div class="card-right">
+      <select class="status-sel ${STATUS[st].cls}" data-id="${b.id}" data-cur="${st}">${opts}</select>
+      <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="m9 6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </div>`;
+}
+
+overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+function closeModal(){ overlay.classList.remove('show'); }
+window.closeAlgaModal = closeModal;
+
+let dragStartY = null, dragging = false;
+modalBox.addEventListener('touchstart', (e) => {
+  if (modalBox.scrollTop > 0) return;
+  dragStartY = e.touches[0].clientY; dragging = true; modalBox.style.transition = 'none';
+}, { passive: true });
+modalBox.addEventListener('touchmove', (e) => {
+  if (!dragging || dragStartY === null) return;
+  const dy = e.touches[0].clientY - dragStartY;
+  if (dy > 0) {
+    modalBox.style.transform = 'translateY(' + dy + 'px)';
+    overlay.style.background = 'rgba(16,36,43,' + Math.max(0, 0.5 * (1 - dy / 250)) + ')';
+  }
+}, { passive: true });
+modalBox.addEventListener('touchend', (e) => {
+  if (!dragging) return;
+  dragging = false;
+  const dy = e.changedTouches[0].clientY - dragStartY;
+  modalBox.style.transition = ''; overlay.style.background = '';
+  if (dy > 120) { closeModal(); setTimeout(() => { modalBox.style.transform = ''; }, 300); }
+  else { modalBox.style.transform = ''; }
+  dragStartY = null;
+}, { passive: true });
+
+function openModal(id) {
+  const b = byId[id]; if (!b) return;
+  const t = b.service_type || 'excursion';
+  const digits = (b.phone || '').replace(/\D/g, '');
+  const rows = [];
+  const add = (k, v, mono) => { if (v) rows.push(`<div class="m-row"><span class="k">${k}</span><span class="v${mono?' mono':''}">${esc(v)}</span></div>`); };
+
+  add('Телефон', b.phone, true);
+  add('Услуга', b.service);
+  if (t === 'hotel') { add('Дата заезда', b.date1, true); add('Дата выезда', b.date2, true); add('Номеров', b.people, true); add('Гостей', b.guests, true); }
+  else { add('Дата', b.date1, true); add('Человек', b.people, true); }
+  add('Остров выезда', b.island);
+  add('Приватный трансфер', b.transfer);
+  add('Получено', b.received, true);
+
+  const waIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.607zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>';
+  const tgIcon = '<svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>';
+  const callIcon = '<svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>';
+  const copyIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="11" height="11" rx="2" stroke="#3a4d54" stroke-width="1.8"/><path d="M5 15V5a2 2 0 0 1 2-2h10" stroke="#3a4d54" stroke-width="1.8"/></svg>';
+  const delIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" stroke="#c2453d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  modalBox.innerHTML = `
+    <div class="m-grab"></div>
+    <div class="m-head">
+      <div>
+        <span class="m-badge">${TYPE_LABEL[t]||t}</span>
+        <h3 class="m-name">${esc(b.fio) || '—'}</h3>
+      </div>
+      <button class="m-close" onclick="window.closeAlgaModal()">&times;</button>
+    </div>
+    <div class="m-rows">${rows.join('')}</div>
+    ${b.notes ? `<div class="m-notes">📝 ${esc(b.notes)}</div>` : ''}
+    <div class="m-actions">
+      <a class="m-btn b-wa" href="https://wa.me/${digits}" target="_blank" rel="noopener">${waIcon} WhatsApp</a>
+      <a class="m-btn b-tg" href="https://t.me/+${digits}" target="_blank" rel="noopener">${tgIcon} Telegram</a>
+      <a class="m-btn b-call" href="tel:+${digits}">${callIcon} Позвонить</a>
+      <button class="m-btn b-copy" id="copyPhone">${copyIcon} Копировать</button>
+      <button class="m-btn b-del" id="delBtn">${delIcon} Удалить заявку</button>
+    </div>`;
+
+  overlay.classList.add('show');
+
+  const copyBtn = $('copyPhone');
+  if (copyBtn) copyBtn.addEventListener('click', () => {
+    navigator.clipboard?.writeText(b.phone || '').then(() => { copyBtn.innerHTML = '✓ Скопировано'; });
+  });
+
+  const delBtn = $('delBtn');
+  if (delBtn) delBtn.addEventListener('click', async () => {
+    if (!confirm('Удалить заявку «' + (b.fio || '') + '» безвозвратно?')) return;
+    delBtn.disabled = true; delBtn.textContent = 'Удаление...';
+    try { await deleteDoc(doc(db, 'bookings', id)); closeModal(); }
+    catch (e) {
+      alert('Не удалось удалить. Проверьте правило allow delete в Firestore.');
+      delBtn.disabled = false; delBtn.innerHTML = delIcon + ' Удалить заявку';
+    }
+  });
+}
+
+function refreshData() { if (unsub) { unsub(); unsub = null; } firstLoad = true; subscribe(); }
+(function () {
+  let ptrStart = null, ptrPulling = false;
+  const PTR_MAX = 90, PTR_TRIG = 65;
+  window.addEventListener('touchstart', (e) => {
+    if (panel.classList.contains('hidden')) return;
+    if (overlay.classList.contains('show')) return;
+    if (window.scrollY > 0) return;
+    ptrStart = e.touches[0].clientY; ptrPulling = true;
+  }, { passive: true });
+  window.addEventListener('touchmove', (e) => {
+    if (!ptrPulling || ptrStart === null) return;
+    const dy = e.touches[0].clientY - ptrStart;
+    if (dy > 0 && window.scrollY <= 0) {
+      const d = Math.min(dy, PTR_MAX);
+      ptr.style.transform = `translateX(-50%) translateY(${d - 42}px) rotate(${d * 4}deg)`;
+    }
+  }, { passive: true });
+  window.addEventListener('touchend', (e) => {
+    if (!ptrPulling) return;
+    ptrPulling = false;
+    const dy = e.changedTouches[0].clientY - ptrStart;
+    ptrStart = null;
+    if (dy > PTR_TRIG) {
+      ptr.classList.add('spin');
+      ptr.style.transform = 'translateX(-50%) translateY(15px)';
+      refreshData();
+      setTimeout(() => { ptr.classList.remove('spin'); ptr.style.transform = ''; }, 800);
+    } else { ptr.style.transform = ''; }
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
