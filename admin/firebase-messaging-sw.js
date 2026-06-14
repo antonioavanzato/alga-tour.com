@@ -1,7 +1,3 @@
-/* ============================================================
-   ALGA · Service Worker для фоновых push-уведомлений (FCM)
-   Файл ДОЛЖЕН лежать рядом с index.html (в той же папке /admin/)
-   ============================================================ */
 importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js');
 
