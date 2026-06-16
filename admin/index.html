@@ -471,12 +471,13 @@ function openModal(id) {
   const digits = (b.phone || '').replace(/\D/g, '');
   const rows = [];
   const add = (k, v, mono) => { if (v) rows.push(`<div class="m-row"><span class="k">${k}</span><span class="v${mono?' mono':''}">${esc(v)}</span></div>`); };
+  const fmtD = (s) => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ''); return m ? m[3] + '.' + m[2] + '.' + m[1] : (s || ''); };
 
   add('Телефон', b.phone, true);
   add('Услуга', b.service);
-  if (t === 'hotel') { add('Дата заезда', b.date1, true); add('Дата выезда', b.date2, true); add('Номеров', b.people, true); add('Гостей', b.guests, true); }
-  else if (t === 'author') { add('Начало', b.date1, true); add('Окончание', b.date2, true); add('Человек', b.people, true); }
-  else { add('Дата', b.date1, true); add('Человек', b.people, true); }
+  if (t === 'hotel') { add('Дата заезда', fmtD(b.date1), true); add('Дата выезда', fmtD(b.date2), true); add('Номеров', b.people, true); add('Гостей', b.guests, true); }
+  else if (t === 'author') { add('Начало', fmtD(b.date1), true); add('Окончание', fmtD(b.date2), true); add('Человек', b.people, true); }
+  else { add('Дата', fmtD(b.date1), true); add('Человек', b.people, true); }
   add('Остров выезда', b.island);
   add('Приватный трансфер', b.transfer);
   add('Получено', b.received, true);
