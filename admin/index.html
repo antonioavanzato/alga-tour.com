@@ -225,6 +225,8 @@
         <option value="resort">Резорты</option>
         <option value="hotel">Отели</option>
         <option value="author">Авторские туры</option>
+        <option value="diving">Дайвинг</option>
+        <option value="sport">Активный спорт</option>
       </select>
       <select id="statusFilter">
         <option value="">Все статусы</option>
@@ -273,7 +275,7 @@ const overlay = $('modalOverlay'), modalBox = $('modalBox'), ptr = $('ptr');
 document.body.appendChild(overlay);
 document.body.appendChild(ptr);
 
-const TYPE_LABEL = { excursion:'Экскурсия', resort:'Резорт', hotel:'Отель', author:'Авторский тур' };
+const TYPE_LABEL = { excursion:'Экскурсия', resort:'Резорт', hotel:'Отель', author:'Авторский тур', diving:'Дайвинг', sport:'Активный спорт' };
 const STATUS = {
   new:      { label:'Новая',        cls:'st-new',      dot:'#d98a00' },
   progress: { label:'В работе',     cls:'st-progress', dot:'#2563eb' },
@@ -329,7 +331,7 @@ function notifyNew(b) {
   beep();
   if ('Notification' in window && Notification.permission === 'granted') {
     const txt = (b.fio || 'Без имени') + ' · ' + (TYPE_LABEL[b.service_type] || '') + ' · ' + (b.phone || '');
-        try { new Notification('🔔 Новая заявка ALGA', { body: txt, tag: 'alga-booking' }); } catch (e) {}
+    try { new Notification('🔔 Новая заявка ALGA', { body: txt, tag: 'alga-booking' }); } catch (e) {}
   }
 }
 
