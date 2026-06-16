@@ -292,7 +292,9 @@ async function enablePush() {
     messaging = getMessaging(app);
     const token = await getToken(messaging, { vapidKey: VAPID_KEY, serviceWorkerRegistration: reg });
     if (token) {
-      await setDoc(doc(db, 'push_tokens', token), { token, email: auth.currentUser.email, ts: serverTimestamp() }, { merge: true });
+      const safeId = auth.currentUser.email.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+      await setDoc(doc(db, 'push_tokens', safeId),
+        { token, email: auth.currentUser.email, ts: serverTimestamp() });
     }
     onMessage(messaging, () => beep());
   } catch (e) { console.error('push:', e); }
