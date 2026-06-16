@@ -13,10 +13,9 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  const n = payload.notification || {};
-  const data = payload.data || {};
-  self.registration.showNotification(n.title || '🔔 Новая заявка ALGA', {
-    body: n.body || data.body || '',
+  const d = payload.data || {};
+  self.registration.showNotification(d.title || '🔔 Новая заявка ALGA', {
+    body: d.body || '',
     icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%230e5f76'/%3E%3Cpath d='M4 14c3 0 3-3 6-3s3 3 6 3 3-3 4-3' stroke='%237fe3d0' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3Cpath d='M4 18c3 0 3-3 6-3s3 3 6 3 3-3 4-3' stroke='%23fff' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E",
     tag: 'alga-booking',
     data: { url: self.registration.scope }
